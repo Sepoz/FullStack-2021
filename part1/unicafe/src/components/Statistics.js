@@ -1,5 +1,7 @@
 import React from "react";
 
+import Statistic from "./Statistic";
+
 function Statistics(props) {
     const { good, neutral, bad } = props;
 
@@ -15,12 +17,19 @@ function Statistics(props) {
     return (
         <div>
             <h1>Statistics</h1>
-            <p>good: {good}</p>
-            <p>neutral: {neutral}</p>
-            <p>bad: {bad}</p>
-            <p>total: {good + bad + neutral}</p>
-            <p>average: {(good - bad) / (good + bad + neutral)}</p>
-            <p>positive: {(good / (good + bad + neutral)) * 100}%</p>
+
+            <Statistic text="good" value={good} />
+            <Statistic text="neutral" value={neutral} />
+            <Statistic text="bad" value={bad} />
+            <Statistic text="total" value={good + bad + neutral} />
+            <Statistic
+                text="average"
+                value={(good - bad) / (good + bad + neutral)}
+            />
+            <Statistic
+                text="positive"
+                value={(good / (good + bad + neutral)) * 100}
+            />
         </div>
     );
 }
