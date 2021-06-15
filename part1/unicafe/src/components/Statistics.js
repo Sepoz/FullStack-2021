@@ -17,19 +17,22 @@ function Statistics(props) {
     return (
         <div>
             <h1>Statistics</h1>
-
-            <Statistic text="good" value={good} />
-            <Statistic text="neutral" value={neutral} />
-            <Statistic text="bad" value={bad} />
-            <Statistic text="total" value={good + bad + neutral} />
-            <Statistic
-                text="average"
-                value={(good - bad) / (good + bad + neutral)}
-            />
-            <Statistic
-                text="positive"
-                value={(good / (good + bad + neutral)) * 100}
-            />
+            <table>
+                <tbody>
+                    <Statistic text="good" value={good} />
+                    <Statistic text="neutral" value={neutral} />
+                    <Statistic text="bad" value={bad} />
+                    <Statistic text="total" value={good + bad + neutral} />
+                    <Statistic
+                        text="average"
+                        value={(good - bad) / (good + bad + neutral)}
+                    />
+                    <Statistic
+                        text="positive"
+                        value={(good / (good + bad + neutral)) * 100}
+                    />
+                </tbody>
+            </table>
         </div>
     );
 }
