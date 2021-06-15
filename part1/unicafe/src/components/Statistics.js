@@ -2,6 +2,16 @@ import React from "react";
 
 function Statistics(props) {
     const { good, neutral, bad } = props;
+
+    if (good === 0 && neutral === 0 && bad === 0) {
+        return (
+            <div>
+                <h1>Statistics</h1>
+                <p>no feedback given</p>
+            </div>
+        );
+    }
+
     return (
         <div>
             <h1>Statistics</h1>
