@@ -7,15 +7,9 @@ import Total from "./Total";
 function Course(props) {
     return (
         <div>
-            {props.courses.map((course) => {
-                return (
-                    <div key={course.id}>
-                        <Header name={course.name} />
-                        <Content parts={course.parts} />
-                        <Total parts={course.parts} />
-                    </div>
-                );
-            })}
+            <Header name={props.course.name} />
+            <Content parts={props.course.parts} />
+            <Total parts={props.course.parts} />
         </div>
     );
 }
