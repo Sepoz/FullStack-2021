@@ -7,13 +7,18 @@ const App = () => {
     function handleSubmit(event) {
         event.preventDefault();
 
-        let newPersonObject = {
-            name: newName,
-            id: persons.length + 1,
-        };
+        const checkNewName = persons.find((person) => person.name === newName);
+        if (checkNewName !== undefined) {
+            alert(`${newName} is already added to the Phonebook!`);
+        } else {
+            let newPersonObject = {
+                name: newName,
+                id: persons.length + 1,
+            };
 
-        setPersons(persons.concat(newPersonObject));
-        setNewName("");
+            setPersons(persons.concat(newPersonObject));
+            setNewName("");
+        }
     }
 
     function handleNewNote(event) {
