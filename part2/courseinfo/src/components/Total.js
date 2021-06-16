@@ -4,13 +4,9 @@ function Total(props) {
     const [...parts] = props.parts;
 
     function sumTotal() {
-        let sum = 0;
-
-        parts.forEach((part) => {
-            sum = sum + part.exercises;
-        });
-
-        return sum;
+        return parts.reduce(function (acc, part) {
+            return acc + part.exercises;
+        }, 0);
     }
 
     return <p>Total of {sumTotal()} exercises</p>;
