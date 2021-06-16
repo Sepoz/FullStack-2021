@@ -18,7 +18,7 @@ const App = () => {
     function handleSubmit(event) {
         event.preventDefault();
 
-        const checkNewName = persons.find((person) => person.name === newName);
+        let checkNewName = persons.find((person) => person.name === newName);
         if (checkNewName !== undefined) {
             alert(`${newName} is already added to the Phonebook!`);
         } else {
@@ -28,9 +28,13 @@ const App = () => {
                 id: persons.length + 1,
             };
 
-            setPersons(persons.concat(newPersonObject));
-            setNewName("");
-            setNewPhoneNumber("");
+            axios
+                .post("http://localhost:3001/persons", newPersonObject)
+                .then((res) => {
+                    setPersons(persons.concat(res.data));
+                    setNewName("");
+                    setNewPhoneNumber("");
+                });
         }
     }
 
