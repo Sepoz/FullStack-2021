@@ -1,14 +1,19 @@
 import React from "react";
 
 function Total(props) {
-    return (
-        <p>
-            Number of exercises{" "}
-            {props.parts[0].exercises +
-                props.parts[1].exercises +
-                props.parts[2].exercises}
-        </p>
-    );
+    const [...parts] = props.parts;
+
+    function sumTotal() {
+        let sum = 0;
+
+        parts.forEach((part) => {
+            sum = sum + part.exercises;
+        });
+
+        return sum;
+    }
+
+    return <p>Total of {sumTotal()} exercises</p>;
 }
 
 export default Total;
