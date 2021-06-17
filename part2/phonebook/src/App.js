@@ -18,12 +18,26 @@ const App = () => {
     }, []);
 
     // form submission handler
-    function handleSubmit(event) {
+    // async/await workaround: getAllPersons is executed before updatePhoneNumber
+    async function handleSubmit(event) {
         event.preventDefault();
 
         let checkNewName = persons.find((person) => person.name === newName);
         if (checkNewName !== undefined) {
-            alert(`${newName} is already added to the Phonebook!`);
+            if (
+                window.confirm(
+                    `${newName} is already added to the Phonebook, replace the old number with a new one?`
+                )
+            ) {
+                await servicePersons.updatePhoneNumber(checkNewName.id, {
+                    ...checkNewName,
+                    number: newPhoneNumber,
+                });
+
+                await servicePersons
+                    .getAllPersons()
+                    .then((initialPersons) => setPersons(initialPersons));
+            }
         } else {
             let newPersonObject = {
                 name: newName,
