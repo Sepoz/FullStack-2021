@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
+import servicePersons from "./services/persons";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 
@@ -10,9 +10,9 @@ const App = () => {
     const [newPhoneNumber, setNewPhoneNumber] = useState("");
 
     useEffect(() => {
-        axios
-            .get("http://localhost:3001/persons")
-            .then((res) => setPersons(res.data));
+        servicePersons
+            .getAllPersons()
+            .then((initialPersons) => setPersons(initialPersons));
     }, []);
 
     function handleSubmit(event) {
@@ -28,10 +28,10 @@ const App = () => {
                 id: persons.length + 1,
             };
 
-            axios
-                .post("http://localhost:3001/persons", newPersonObject)
-                .then((res) => {
-                    setPersons(persons.concat(res.data));
+            servicePersons
+                .createNewPerson(newPersonObject)
+                .then((returnedPersons) => {
+                    setPersons(persons.concat(returnedPersons));
                     setNewName("");
                     setNewPhoneNumber("");
                 });
