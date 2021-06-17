@@ -5,12 +5,14 @@ import servicePersons from "./services/persons";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import CompleteMessage from "./components/CompleteMessage";
+import ErrorMessage from "./components/ErrorMessage";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
     const [newName, setNewName] = useState("");
     const [newPhoneNumber, setNewPhoneNumber] = useState("");
     const [completeMessage, setCompleteMessage] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     // get persons from db
     useEffect(() => {
@@ -42,6 +44,14 @@ const App = () => {
                         );
                         setTimeout(() => {
                             setCompleteMessage(null);
+                        }, 2000);
+                    })
+                    .catch(() => {
+                        setErrorMessage(
+                            `${checkNewName.name} has already been removed from server`
+                        );
+                        setTimeout(() => {
+                            setErrorMessage(null);
                         }, 2000);
                     });
 
@@ -107,6 +117,9 @@ const App = () => {
             <h2>Phonebook</h2>
             {completeMessage !== null && (
                 <CompleteMessage completeMessage={completeMessage} />
+            )}
+            {errorMessage !== null && (
+                <ErrorMessage errorMessage={errorMessage} />
             )}
             <PersonForm
                 handleSubmit={handleSubmit}
