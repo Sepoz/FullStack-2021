@@ -4,11 +4,13 @@ import servicePersons from "./services/persons";
 
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import CompleteMessage from "./components/CompleteMessage";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
     const [newName, setNewName] = useState("");
     const [newPhoneNumber, setNewPhoneNumber] = useState("");
+    const [completeMessage, setCompleteMessage] = useState(null);
 
     // get persons from db
     useEffect(() => {
@@ -29,10 +31,19 @@ const App = () => {
                     `${newName} is already added to the Phonebook, replace the old number with a new one?`
                 )
             ) {
-                await servicePersons.updatePhoneNumber(checkNewName.id, {
-                    ...checkNewName,
-                    number: newPhoneNumber,
-                });
+                await servicePersons
+                    .updatePhoneNumber(checkNewName.id, {
+                        ...checkNewName,
+                        number: newPhoneNumber,
+                    })
+                    .then(() => {
+                        setCompleteMessage(
+                            `${checkNewName.name} is now updated!`
+                        );
+                        setTimeout(() => {
+                            setCompleteMessage(null);
+                        }, 2000);
+                    });
 
                 await servicePersons
                     .getAllPersons()
@@ -51,6 +62,12 @@ const App = () => {
                     setPersons(persons.concat(returnedPerson));
                     setNewName("");
                     setNewPhoneNumber("");
+                })
+                .then(() => {
+                    setCompleteMessage(`You added ${newName}!`);
+                    setTimeout(() => {
+                        setCompleteMessage(null);
+                    }, 2000);
                 });
         }
     }
@@ -74,7 +91,13 @@ const App = () => {
                 // reload persons array
                 await servicePersons
                     .getAllPersons()
-                    .then((initialPersons) => setPersons(initialPersons));
+                    .then((initialPersons) => setPersons(initialPersons))
+                    .then(() => {
+                        setCompleteMessage(`${name} is gone...`);
+                        setTimeout(() => {
+                            setCompleteMessage(null);
+                        }, 2000);
+                    });
             }
         };
     }
@@ -82,6 +105,9 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            {completeMessage !== null && (
+                <CompleteMessage completeMessage={completeMessage} />
+            )}
             <PersonForm
                 handleSubmit={handleSubmit}
                 handleNewName={handleNewName}
