@@ -6,11 +6,13 @@ import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import CompleteMessage from "./components/CompleteMessage";
 import ErrorMessage from "./components/ErrorMessage";
+import SearchPerson from "./components/SearchPerson";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
     const [newName, setNewName] = useState("");
     const [newPhoneNumber, setNewPhoneNumber] = useState("");
+    const [filteredPerson, setFilteredPerson] = useState("");
     const [completeMessage, setCompleteMessage] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
 
@@ -82,15 +84,6 @@ const App = () => {
         }
     }
 
-    // handle name input
-    function handleNewName(event) {
-        setNewName(event.target.value);
-    }
-
-    // handle phone number input
-    function handleNewPhoneNumber(event) {
-        setNewPhoneNumber(event.target.value);
-    }
     // handle deleting person
     function handleDeletePerson(id, name) {
         // async/await workaround: getAllPersons is executed before deletePerson
@@ -112,6 +105,28 @@ const App = () => {
         };
     }
 
+    // handle name filtering
+    function handleNewFilter(event) {
+        setFilteredPerson(event.target.value);
+
+        let filtered = persons.filter(
+            (person) =>
+                person.name.toLowerCase().indexOf(event.target.value) !== -1
+        );
+
+        setPersons(filtered);
+    }
+
+    // handle name input
+    function handleNewName(event) {
+        setNewName(event.target.value);
+    }
+
+    // handle phone number input
+    function handleNewPhoneNumber(event) {
+        setNewPhoneNumber(event.target.value);
+    }
+
     return (
         <div>
             <h2>Phonebook</h2>
@@ -121,6 +136,12 @@ const App = () => {
             {errorMessage !== null && (
                 <ErrorMessage errorMessage={errorMessage} />
             )}
+
+            <SearchPerson
+                filteredPerson={filteredPerson}
+                handleNewFilter={handleNewFilter}
+            />
+
             <PersonForm
                 handleSubmit={handleSubmit}
                 handleNewName={handleNewName}
