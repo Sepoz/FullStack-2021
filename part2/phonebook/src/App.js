@@ -65,7 +65,6 @@ const App = () => {
             let newPersonObject = {
                 name: newName,
                 number: newPhoneNumber,
-                id: persons.length + 1,
             };
 
             servicePersons
@@ -113,6 +112,8 @@ const App = () => {
             (person) =>
                 person.name.toLowerCase().indexOf(event.target.value) !== -1
         );
+
+        // api call to reset persons
 
         setPersons(filtered);
     }
