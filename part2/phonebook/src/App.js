@@ -13,14 +13,16 @@ const App = () => {
     const [newName, setNewName] = useState("");
     const [newPhoneNumber, setNewPhoneNumber] = useState("");
     const [filteredPerson, setFilteredPerson] = useState("");
+    const [cachedPersons, setCachedPersons] = useState([]);
     const [completeMessage, setCompleteMessage] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
 
     // get persons from db
     useEffect(() => {
-        servicePersons
-            .getAllPersons()
-            .then((initialPersons) => setPersons(initialPersons));
+        servicePersons.getAllPersons().then((initialPersons) => {
+            setPersons(initialPersons);
+            setCachedPersons(initialPersons);
+        });
     }, []);
 
     // form submission handler
@@ -57,9 +59,10 @@ const App = () => {
                         }, 2000);
                     });
 
-                await servicePersons
-                    .getAllPersons()
-                    .then((initialPersons) => setPersons(initialPersons));
+                await servicePersons.getAllPersons().then((initialPersons) => {
+                    setPersons(initialPersons);
+                    setCachedPersons(initialPersons);
+                });
             }
         } else {
             let newPersonObject = {
@@ -71,6 +74,7 @@ const App = () => {
                 .createNewPerson(newPersonObject)
                 .then((returnedPerson) => {
                     setPersons(persons.concat(returnedPerson));
+                    setCachedPersons(persons.concat(returnedPerson));
                     setNewName("");
                     setNewPhoneNumber("");
                 })
@@ -94,6 +98,7 @@ const App = () => {
                 await servicePersons
                     .getAllPersons()
                     .then((initialPersons) => setPersons(initialPersons))
+                    .then((initialPersons) => setCachedPersons(initialPersons))
                     .then(() => {
                         setCompleteMessage(`${name} is gone...`);
                         setTimeout(() => {
@@ -107,14 +112,10 @@ const App = () => {
     // handle name filtering
     function handleNewFilter(event) {
         setFilteredPerson(event.target.value);
-
-        let filtered = persons.filter(
+        let filtered = cachedPersons.filter(
             (person) =>
                 person.name.toLowerCase().indexOf(event.target.value) !== -1
         );
-
-        // api call to reset persons
-
         setPersons(filtered);
     }
 
