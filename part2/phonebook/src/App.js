@@ -83,6 +83,12 @@ const App = () => {
                     setTimeout(() => {
                         setCompleteMessage(null);
                     }, 2000);
+                })
+                .catch((err) => {
+                    setErrorMessage(`${err.response.data.error}`);
+                    setTimeout(() => {
+                        setErrorMessage(null);
+                    }, 2000);
                 });
         }
     }
