@@ -27,7 +27,7 @@ beforeEach(async () => {
     await blogObject.save();
 });
 
-describe("api tests", () => {
+describe("correctly getting blogs from db", () => {
     test("blogs are returned as json", async () => {
         await api
             .get("/api/blogs")
@@ -47,7 +47,9 @@ describe("api tests", () => {
             expect(blog.id).toBeDefined();
         });
     });
+});
 
+describe("correctly posting blogs to db", () => {
     test("post request successfully creates a new blog post", async () => {
         const testBlog = {
             title: "Testing POST",
@@ -121,8 +123,21 @@ describe("api tests", () => {
 
         expect(testPost.statusCode).toBe(400);
     });
+});
 
-    afterAll(() => {
-        mongoose.connection.close();
+describe("correctly deleting blogs from db", () => {
+    test("blog is deleted using id", async () => {
+        let getBlogs = await api.get("/api/blogs");
+        const blogId = getBlogs.body[0].id;
+
+        await api.del(`/api/blogs/${blogId}`);
+
+        getBlogs = await api.get("/api/blogs");
+
+        expect(getBlogs.body).toHaveLength(1);
     });
+});
+
+afterAll(() => {
+    mongoose.connection.close();
 });
