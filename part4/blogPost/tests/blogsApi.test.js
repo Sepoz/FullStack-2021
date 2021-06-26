@@ -130,11 +130,28 @@ describe("correctly deleting blogs from db", () => {
         let getBlogs = await api.get("/api/blogs");
         const blogId = getBlogs.body[0].id;
 
-        await api.del(`/api/blogs/${blogId}`);
+        await api.delete(`/api/blogs/${blogId}`);
 
         getBlogs = await api.get("/api/blogs");
 
         expect(getBlogs.body).toHaveLength(1);
+    });
+});
+
+describe("correctly updating blogs from db", () => {
+    test("blog is updated using id", async () => {
+        let getBlogs = await api.get("/api/blogs");
+        const blogId = getBlogs.body[0].id;
+
+        const updatedLikes = {
+            likes: 100,
+        };
+
+        await api.patch(`/api/blogs/${blogId}`).send(updatedLikes);
+
+        getBlogs = await api.get("/api/blogs");
+
+        expect(getBlogs.body[0].likes).toBe(100);
     });
 });
 
