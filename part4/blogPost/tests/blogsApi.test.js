@@ -72,6 +72,56 @@ describe("api tests", () => {
         });
     });
 
+    test("if likes property is missing, set it to 0", async () => {
+        const testBlog = {
+            title: "Testing POST",
+            author: "Roberto Mancini",
+            url: "https://reactpatterns.com/",
+        };
+
+        const testPost = await api
+            .post("/api/blogs")
+            .set("Content-Type", "application/json")
+            .send(testBlog);
+
+        const response = await api.get("/api/blogs");
+        expect(response.body[2]).toEqual({
+            title: "Testing POST",
+            author: "Roberto Mancini",
+            url: "https://reactpatterns.com/",
+            likes: 0,
+            id: testPost.body.id,
+        });
+    });
+
+    test("if title or url properties are missing return status code 400", async () => {
+        const testBlogMissingTitle = {
+            author: "Roberto Mancini",
+            url: "https://reactpatterns.com/",
+            likes: 21,
+        };
+
+        const testBlogMissingUrl = {
+            title: "Testing POST",
+            author: "Roberto Mancini",
+            likes: 21,
+        };
+
+        let testPost = await api
+            .post("/api/blogs")
+            .set("Content-Type", "application/json")
+            .send(testBlogMissingTitle);
+
+        expect(testPost.statusCode).toBe(400);
+
+        testPost = await api
+            .post("/api/blogs")
+            .set("Content-Type", "application/json")
+            .send(testBlogMissingUrl);
+
+        expect(testPost.statusCode).toBe(400);
+    });
+
     afterAll(() => {
         mongoose.connection.close();
     });

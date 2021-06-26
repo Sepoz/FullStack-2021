@@ -7,6 +7,15 @@ blogsRouter.get("/", async (request, response) => {
 });
 
 blogsRouter.post("/", async (request, response) => {
+    if (request.body.likes === undefined) {
+        request.body.likes = 0;
+    } else if (
+        request.body.title === undefined ||
+        request.body.url === undefined
+    ) {
+        return response.status(400).json({ error: "missing title or url" });
+    }
+
     const blog = new Blog(request.body);
 
     const saveBlog = await blog.save();
