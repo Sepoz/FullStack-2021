@@ -6,20 +6,16 @@ const api = supertest(app);
 
 const initialBlogs = [
     {
-        _id: "5a422a851b54a676234d17f7",
         title: "React patterns",
         author: "Michael Chan",
         url: "https://reactpatterns.com/",
         likes: 7,
-        __v: 0,
     },
     {
-        _id: "5a422aa71b54a676234d17f8",
         title: "Go To Statement Considered Harmful",
         author: "Edsger W. Dijkstra",
         url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
         likes: 5,
-        __v: 0,
     },
 ];
 
@@ -39,10 +35,41 @@ describe("api tests", () => {
             .expect("Content-Type", /application\/json/);
     });
 
-    test("blogs has length 2", async () => {
+    test("blogs in db has length 2", async () => {
         const response = await api.get("/api/blogs");
 
         expect(response.body).toHaveLength(2);
+    });
+
+    test("blogs in db has id property", async () => {
+        const response = await api.get("/api/blogs");
+        response.body.map((blog) => {
+            expect(blog.id).toBeDefined();
+        });
+    });
+
+    test("post request successfully creates a new blog post", async () => {
+        const testBlog = {
+            title: "Testing POST",
+            author: "Roberto Mancini",
+            url: "https://reactpatterns.com/",
+            likes: 21,
+        };
+
+        const testPost = await api
+            .post("/api/blogs")
+            .set("Content-Type", "application/json")
+            .send(testBlog);
+
+        const response = await api.get("/api/blogs");
+        expect(response.body).toHaveLength(3);
+        expect(response.body[2]).toEqual({
+            title: "Testing POST",
+            author: "Roberto Mancini",
+            url: "https://reactpatterns.com/",
+            likes: 21,
+            id: testPost.body.id,
+        });
     });
 
     afterAll(() => {
