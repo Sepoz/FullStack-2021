@@ -1,24 +1,38 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 blogsRouter.get("/", async (request, response) => {
-    const findBlogs = await Blog.find({});
-    response.json(findBlogs);
+    const blogs = await Blog.find({}).populate("user", {
+        username: 1,
+        name: 1,
+    });
+    response.json(blogs);
 });
 
 blogsRouter.post("/", async (request, response) => {
-    if (request.body.likes === undefined) {
-        request.body.likes = 0;
-    } else if (
-        request.body.title === undefined ||
-        request.body.url === undefined
-    ) {
+    const body = request.body;
+
+    if (body.likes === undefined) {
+        body.likes = 0;
+    } else if (body.title === undefined || body.url === undefined) {
         return response.status(400).json({ error: "missing title or url" });
     }
 
-    const blog = new Blog(request.body);
+    const user = await User.findById(body.userId);
+
+    const blog = new Blog({
+        title: body.title,
+        author: body.author,
+        url: body.url,
+        likes: body.likes,
+        user: user._id,
+    });
 
     const saveBlog = await blog.save();
+    user.blogs = user.blogs.concat(saveBlog._id);
+    await user.save();
+
     response.status(201).json(saveBlog);
 });
 
