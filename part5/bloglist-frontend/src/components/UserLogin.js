@@ -1,7 +1,7 @@
 import React from "react";
 import login from "../services/login";
 
-function LoginForm(props) {
+function UserLogin(props) {
     const { username, password, setUsername, setPassword, setUser } = props;
 
     async function handleLogin(event) {
@@ -9,8 +9,14 @@ function LoginForm(props) {
         try {
             const user = await login({ username, password });
             // REMOVE LOG
-            console.log(user.token);
-            setUser(user.token);
+            console.log(user);
+
+            window.localStorage.setItem(
+                "loggedBlogsAppUser",
+                JSON.stringify(user)
+            );
+
+            setUser(user);
             setUsername("");
             setPassword("");
         } catch (exception) {
@@ -44,4 +50,4 @@ function LoginForm(props) {
     );
 }
 
-export default LoginForm;
+export default UserLogin;
