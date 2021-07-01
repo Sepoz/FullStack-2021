@@ -1,9 +1,17 @@
 import React from "react";
 import loginServices from "../services/loginServices";
 import blogsServices from "../services/blogsServices";
+import notificationServices from "../services/notificationServices";
 
 const UserLogin = (props) => {
-    const { username, password, setUsername, setPassword, setUser } = props;
+    const {
+        username,
+        password,
+        setUsername,
+        setPassword,
+        setUser,
+        setNotification,
+    } = props;
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -18,9 +26,15 @@ const UserLogin = (props) => {
             setUser(user);
             setUsername("");
             setPassword("");
-        } catch (exception) {
-            // ADD ERROR MESSAGE
-            console.log("login error", exception);
+            notificationServices.showNotification(
+                `${user.username} logged-in`,
+                setNotification
+            );
+        } catch (error) {
+            notificationServices.showNotification(
+                "wrong username or password",
+                setNotification
+            );
         }
     };
 

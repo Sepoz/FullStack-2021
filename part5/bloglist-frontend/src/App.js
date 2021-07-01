@@ -4,6 +4,7 @@ import blogsServices from "./services/blogsServices";
 import UserLogin from "./components/UserLogin";
 import UserLogout from "./components/UserLogout";
 import BlogForm from "./components/BlogForm";
+import Notification from "./components/Notification";
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
@@ -13,6 +14,7 @@ const App = () => {
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [url, setUrl] = useState("");
+    const [notification, setNotification] = useState("");
 
     useEffect(() => {
         async function getAllBlogs() {
@@ -34,6 +36,8 @@ const App = () => {
 
     return (
         <div>
+            {notification && <Notification notification={notification} />}
+
             {user === null ? (
                 <UserLogin
                     username={username}
@@ -41,10 +45,15 @@ const App = () => {
                     setUsername={setUsername}
                     setPassword={setPassword}
                     setUser={setUser}
+                    setNotification={setNotification}
                 />
             ) : (
                 <div>
-                    <UserLogout user={user} setUser={setUser} />
+                    <UserLogout
+                        user={user}
+                        setUser={setUser}
+                        setNotification={setNotification}
+                    />
                     <BlogForm
                         title={title}
                         author={author}
@@ -54,6 +63,7 @@ const App = () => {
                         setAuthor={setAuthor}
                         setUrl={setUrl}
                         setBlogs={setBlogs}
+                        setNotification={setNotification}
                     />
                     <Blogs blogs={blogs} />
                 </div>
