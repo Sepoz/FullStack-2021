@@ -1,7 +1,7 @@
 import React from "react";
 import Blog from "./Blog";
 
-function Blogs(props) {
+const Blogs = (props) => {
     const { blogs } = props;
 
     return (
@@ -12,6 +12,6 @@ function Blogs(props) {
             ))}
         </div>
     );
-}
+};
 
 export default Blogs;

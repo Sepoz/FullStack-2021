@@ -1,21 +1,20 @@
 import React from "react";
-import login from "../services/login";
+import loginServices from "../services/loginServices";
+import blogsServices from "../services/blogsServices";
 
-function UserLogin(props) {
+const UserLogin = (props) => {
     const { username, password, setUsername, setPassword, setUser } = props;
 
-    async function handleLogin(event) {
+    const handleLogin = async (event) => {
         event.preventDefault();
         try {
-            const user = await login({ username, password });
-            // REMOVE LOG
-            console.log(user);
+            const user = await loginServices.login({ username, password });
 
             window.localStorage.setItem(
                 "loggedBlogsAppUser",
                 JSON.stringify(user)
             );
-
+            blogsServices.setToken(user.token);
             setUser(user);
             setUsername("");
             setPassword("");
@@ -23,7 +22,7 @@ function UserLogin(props) {
             // ADD ERROR MESSAGE
             console.log("login error", exception);
         }
-    }
+    };
 
     return (
         <form onSubmit={handleLogin}>
@@ -48,6 +47,6 @@ function UserLogin(props) {
             <button type="submit">login</button>
         </form>
     );
-}
+};
 
 export default UserLogin;

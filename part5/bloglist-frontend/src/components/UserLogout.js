@@ -1,12 +1,12 @@
 import React from "react";
 
-function UserLogout(props) {
+const UserLogout = (props) => {
     const { user, setUser } = props;
 
-    function handleLogout() {
+    const handleLogout = () => {
         window.localStorage.removeItem("loggedBlogsAppUser");
         setUser(null);
-    }
+    };
 
     return (
         <div>
@@ -14,6 +14,6 @@ function UserLogout(props) {
             <button onClick={handleLogout}>logout</button>
         </div>
     );
-}
+};
 
 export default UserLogout;
