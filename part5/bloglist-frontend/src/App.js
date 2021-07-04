@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Blogs from "./components/Blogs";
 import blogsServices from "./services/blogsServices";
+import notificationServices from "./services/notificationServices";
 import UserLogin from "./components/UserLogin";
 import UserLogout from "./components/UserLogout";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
+import Togglable from "./components/Togglable";
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
@@ -15,6 +17,8 @@ const App = () => {
     const [author, setAuthor] = useState("");
     const [url, setUrl] = useState("");
     const [notification, setNotification] = useState("");
+
+    const blogFormRef = useRef();
 
     useEffect(() => {
         async function getAllBlogs() {
@@ -33,6 +37,39 @@ const App = () => {
             blogsServices.setToken(user.token);
         }
     }, []);
+
+    const handleSubmitBlog = async (event) => {
+        event.preventDefault();
+
+        try {
+            const newBlogObject = {
+                title,
+                author,
+                url,
+                likes: 0,
+            };
+
+            const response = await blogsServices.create(newBlogObject);
+            setTitle("");
+            setAuthor("");
+            setUrl("");
+
+            notificationServices.showNotification(
+                `${response.title} by ${response.author} created`,
+                setNotification
+            );
+
+            blogFormRef.current.toggleVisibility();
+
+            const updatedBlogs = blogs.concat(response);
+            setBlogs(updatedBlogs);
+        } catch (error) {
+            notificationServices.showNotification(
+                "unable to create blog",
+                setNotification
+            );
+        }
+    };
 
     return (
         <div>
@@ -54,17 +91,18 @@ const App = () => {
                         setUser={setUser}
                         setNotification={setNotification}
                     />
-                    <BlogForm
-                        title={title}
-                        author={author}
-                        url={url}
-                        blogs={blogs}
-                        setTitle={setTitle}
-                        setAuthor={setAuthor}
-                        setUrl={setUrl}
-                        setBlogs={setBlogs}
-                        setNotification={setNotification}
-                    />
+
+                    <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+                        <BlogForm
+                            title={title}
+                            author={author}
+                            url={url}
+                            setTitle={setTitle}
+                            setAuthor={setAuthor}
+                            setUrl={setUrl}
+                            handleSubmitBlog={handleSubmitBlog}
+                        />
+                    </Togglable>
                     <Blogs blogs={blogs} />
                 </div>
             )}

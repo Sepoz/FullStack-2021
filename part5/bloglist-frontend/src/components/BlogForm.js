@@ -1,40 +1,15 @@
 import React from "react";
-import blogsServices from "../services/blogsServices";
-import notificationServices from "../services/notificationServices";
 
 const BlogForm = (props) => {
-    // prettier-ignore
-    const { title, author, url, blogs, setTitle, setAuthor, setUrl, setBlogs, setNotification } = props;
-
-    const handleSubmitBlog = async (event) => {
-        event.preventDefault();
-
-        try {
-            const newBlogObject = {
-                title,
-                author,
-                url,
-                likes: 0,
-            };
-
-            const response = await blogsServices.create(newBlogObject);
-            setTitle("");
-            setAuthor("");
-            setUrl("");
-            notificationServices.showNotification(
-                `${response.title} by ${response.author} created`,
-                setNotification
-            );
-
-            const updatedBlogs = blogs.concat(response);
-            setBlogs(updatedBlogs);
-        } catch (error) {
-            notificationServices.showNotification(
-                "unable to create blog",
-                setNotification
-            );
-        }
-    };
+    const {
+        title,
+        author,
+        url,
+        setTitle,
+        setAuthor,
+        setUrl,
+        handleSubmitBlog,
+    } = props;
 
     return (
         <div>

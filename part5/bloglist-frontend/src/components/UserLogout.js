@@ -22,6 +22,7 @@ const UserLogout = (props) => {
 
     return (
         <div>
+            <p>{user.username} logged-in</p>
             <button onClick={handleLogout}>logout</button>
         </div>
     );
