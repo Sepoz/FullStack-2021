@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Blogs from "./components/Blogs";
 import blogsServices from "./services/blogsServices";
-import notificationServices from "./services/notificationServices";
 import UserLogin from "./components/UserLogin";
 import UserLogout from "./components/UserLogout";
 import BlogForm from "./components/BlogForm";
@@ -13,9 +12,6 @@ const App = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
-    const [title, setTitle] = useState("");
-    const [author, setAuthor] = useState("");
-    const [url, setUrl] = useState("");
     const [notification, setNotification] = useState("");
 
     const blogFormRef = useRef();
@@ -38,37 +34,15 @@ const App = () => {
         }
     }, []);
 
-    const handleSubmitBlog = async (event) => {
-        event.preventDefault();
+    const addBlog = async (blogObject) => {
+        blogFormRef.current.toggleVisibility();
 
-        try {
-            const newBlogObject = {
-                title,
-                author,
-                url,
-                likes: 0,
-            };
+        const response = await blogsServices.create(blogObject);
 
-            const response = await blogsServices.create(newBlogObject);
-            setTitle("");
-            setAuthor("");
-            setUrl("");
+        const updatedBlogs = blogs.concat(response);
+        setBlogs(updatedBlogs);
 
-            notificationServices.showNotification(
-                `${response.title} by ${response.author} created`,
-                setNotification
-            );
-
-            blogFormRef.current.toggleVisibility();
-
-            const updatedBlogs = blogs.concat(response);
-            setBlogs(updatedBlogs);
-        } catch (error) {
-            notificationServices.showNotification(
-                "unable to create blog",
-                setNotification
-            );
-        }
+        return response;
     };
 
     return (
@@ -94,13 +68,8 @@ const App = () => {
 
                     <Togglable buttonLabel="create new blog" ref={blogFormRef}>
                         <BlogForm
-                            title={title}
-                            author={author}
-                            url={url}
-                            setTitle={setTitle}
-                            setAuthor={setAuthor}
-                            setUrl={setUrl}
-                            handleSubmitBlog={handleSubmitBlog}
+                            addBlog={addBlog}
+                            setNotification={setNotification}
                         />
                     </Togglable>
                     <Blogs blogs={blogs} />

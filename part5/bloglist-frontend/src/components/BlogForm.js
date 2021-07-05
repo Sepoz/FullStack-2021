@@ -1,15 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
+import notificationServices from "../services/notificationServices";
 
 const BlogForm = (props) => {
-    const {
-        title,
-        author,
-        url,
-        setTitle,
-        setAuthor,
-        setUrl,
-        handleSubmitBlog,
-    } = props;
+    const { addBlog, setNotification } = props;
+
+    const [title, setTitle] = useState("");
+    const [author, setAuthor] = useState("");
+    const [url, setUrl] = useState("");
+
+    const handleSubmitBlog = async (event) => {
+        event.preventDefault();
+
+        try {
+            const newBlogObject = {
+                title,
+                author,
+                url,
+                likes: 0,
+            };
+
+            const response = await addBlog(newBlogObject);
+            setTitle("");
+            setAuthor("");
+            setUrl("");
+
+            notificationServices.showNotification(
+                `${response.title} by ${response.author} created`,
+                setNotification
+            );
+        } catch (error) {
+            notificationServices.showNotification(
+                "unable to create blog",
+                setNotification
+            );
+        }
+    };
 
     return (
         <div>
