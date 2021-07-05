@@ -4,10 +4,16 @@ import Blog from "./Blog";
 const Blogs = (props) => {
     const { blogs } = props;
 
+    const sortedBlogs = () => {
+        return blogs.sort((a, b) => {
+            return b.likes - a.likes;
+        });
+    };
+
     return (
         <div>
             <h1>Blogs</h1>
-            {blogs.map((blog) => (
+            {sortedBlogs().map((blog) => (
                 <Blog key={blog.id} blog={blog} />
             ))}
         </div>

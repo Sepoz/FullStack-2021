@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import blogsServices from "../services/blogsServices";
 
 const Blog = (props) => {
-    const { title, author, url, likes } = props.blog;
+    const { title, author, url, likes, id } = props.blog;
 
     const [showInfo, setShowInfo] = useState(false);
 
@@ -15,6 +16,16 @@ const Blog = (props) => {
 
     const handleShowInfo = () => {
         setShowInfo(!showInfo);
+    };
+
+    const handleUpdateLikes = async () => {
+        const updatedBlogObject = {
+            ...props.blog,
+            likes: likes + 1,
+        };
+
+        const response = await blogsServices.update(id, updatedBlogObject);
+        console.log(response);
     };
 
     if (showInfo === false) {
@@ -34,7 +45,7 @@ const Blog = (props) => {
                 </p>
                 <p>{url}</p>
                 <p>{likes}</p>
-                <button>like</button>
+                <button onClick={handleUpdateLikes}>like</button>
                 <button onClick={handleShowInfo}>hide</button>
             </div>
         );
