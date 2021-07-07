@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import loginServices from "../services/loginServices";
 import blogsServices from "../services/blogsServices";
 import notificationServices from "../services/notificationServices";
@@ -61,6 +62,15 @@ const UserLogin = (props) => {
             <button type="submit">login</button>
         </form>
     );
+};
+
+UserLogin.propTypes = {
+    username: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    setUsername: PropTypes.func.isRequired,
+    setPassword: PropTypes.func.isRequired,
+    setUser: PropTypes.func.isRequired,
+    setNotification: PropTypes.func.isRequired,
 };
 
 export default UserLogin;
