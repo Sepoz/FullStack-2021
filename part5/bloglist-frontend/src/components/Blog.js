@@ -19,7 +19,7 @@ const Blog = (props) => {
 
     if (showInfo === false) {
         return (
-            <div style={styleBlog}>
+            <div className="blog" style={styleBlog}>
                 <p>
                     {title} {author}
                 </p>
@@ -28,7 +28,7 @@ const Blog = (props) => {
         );
     } else {
         return (
-            <div style={styleBlog}>
+            <div className="blog-extended" style={styleBlog}>
                 <p>
                     {title} {author}
                 </p>
