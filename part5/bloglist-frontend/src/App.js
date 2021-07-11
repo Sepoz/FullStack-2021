@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Blogs from "./components/Blogs";
 import blogsServices from "./services/blogsServices";
+import notificationServices from "./services/notificationServices";
 import UserLogin from "./components/UserLogin";
 import UserLogout from "./components/UserLogout";
 import BlogForm from "./components/BlogForm";
@@ -35,14 +36,26 @@ const App = () => {
     }, []);
 
     const addBlog = async (blogObject) => {
-        blogFormRef.current.toggleVisibility();
+        try {
+            blogFormRef.current.toggleVisibility();
 
-        const response = await blogsServices.create(blogObject);
+            const response = await blogsServices.create(blogObject);
 
-        const updatedBlogs = blogs.concat(response);
-        setBlogs(updatedBlogs);
+            const updatedBlogs = blogs.concat(response);
+            setBlogs(updatedBlogs);
 
-        return response;
+            notificationServices.showNotification(
+                `${response.title} by ${response.author} created`,
+                setNotification
+            );
+
+            return response;
+        } catch (error) {
+            notificationServices.showNotification(
+                "unable to create blog",
+                setNotification
+            );
+        }
     };
 
     return (
@@ -67,10 +80,7 @@ const App = () => {
                     />
 
                     <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-                        <BlogForm
-                            addBlog={addBlog}
-                            setNotification={setNotification}
-                        />
+                        <BlogForm addBlog={addBlog} />
                     </Togglable>
                     <Blogs blogs={blogs} />
                 </div>
