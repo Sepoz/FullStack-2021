@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import LikeButton from "./LikeButton";
 
 const Blog = (props) => {
     const { title, author, url, likes } = props.blog;
@@ -34,7 +35,7 @@ const Blog = (props) => {
                 </p>
                 <p>{url}</p>
                 <p>{likes}</p>
-                <button>like</button>
+                <LikeButton blog={props.blog} />
                 <button onClick={handleShowInfo}>hide</button>
             </div>
         );
